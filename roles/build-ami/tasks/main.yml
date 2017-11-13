@@ -1,0 +1,8 @@
+- name: Create AMI
+  ec2_ami:
+    region: "{{ region }}"
+    instance_id: "{{ ec2.instance_ids[0] }}"
+    name: "webapp"
+    wait: yes
+    state: present
+  register: ami

@@ -1,0 +1,32 @@
+- name: Find existing instance(s)
+  hosts: "tag_Name_ami-build"
+  gather_facts: false
+  tags: find
+  tasks:
+    - name: Add to old-ami-build group
+      group_by:
+        key: old-ami-build
+
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  roles:
+    - role: launch
+      name: ami-build
+- hosts: ami-build
+  sudo: yes
+  vars: 
+   - MyMessage: "version 2"
+  roles:
+   - role: server
+
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  roles:
+    - build-ami
+
+- hosts: old-ami-build
+  connection: local
+  roles:
+    - terminate
